@@ -1,5 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+
+    @* Url.Action *@
+    @* Url.ActionLink *@
+
+    @* Url.RouteUrl *@
+    @* Url.Link *@
+
+    //<a> <form> <button>
 }
 
 <partial name="_AlertMessage" />
@@ -8,3 +16,51 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<ul>
+    <li>asp-area = "Area"</li>
+    <li>asp-action = "Action"</li>
+    <li>asp-controller = "Controller"</li>
+    <li>asp-route.. = "123"</li> truyền dữ liệu VD: asp-id=1, asp-name=quangsonw
+    <li>asp-route = "default"</li>
+</ul>
+@{
+    var routeDate = new Dictionary<string,string>()
+        {
+            {"name", "quangson"},
+            {"abc", "xyz"},
+            {"id","3"}
+        };
+}
+
+<a asp-action="Index" asp-controller="Product" asp-area="ProductManage"
+asp-all-route-data="@routeDate" asp-route-idPost="id">
+    Ví dụ truy cập trang và truyền dữ liệu
+</a>
+
+<p>
+    @Url.Action()
+</p>
+<p>
+    @Url.Action("Privacy")
+</p>
+<p>
+    @Url.Action("Privacy", new {id = 123, name = "quangson"})
+</p>
+<p>
+    @Url.Action("English1","Planet")
+</p>
+<p>
+    @Url.Action("PlanetInfo","Planet", new {id = 3});
+</p>
+<p>
+    @Url.Action("Index","Product", new {area="ProductManage", id = 123})
+</p>
+
+
+<p>
+    @Url.RouteUrl("default", new {action = "HelloView", controller = "Home", id = 123, name = "quangson"})
+</p>
+<p>
+    @Url.RouteUrl("english7-1")
+</p>

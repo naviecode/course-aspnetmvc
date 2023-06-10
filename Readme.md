@@ -17,3 +17,13 @@
 - ViewData
 - ViewBag
 - TempData
+
+## Area
+- Là tên dùng để routing
+- Là cấu trúc thư mục của MVC
+- Thiết lập Area cho controller bằng [Area("AreaName")]
+- Tạo cấu trúc thư mụ
+
+### UrlHelper: Action, ActionLink, RouteUrl, Link
+### HtmlTagHelper: <a> <button> <form>
+asp-area, asp-action, asp-controller, asp-route, asp-route="default"

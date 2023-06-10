@@ -1,0 +1,14 @@
+@using ASP.NET_CORE_MVC.Models
+@model List<ProductModel>
+
+
+<h1>Danh các sản phẩm</h1>
+
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>
+            @item.Name
+        </li>
+    }
+</ul>

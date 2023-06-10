@@ -1,0 +1,11 @@
+
+@inject ASP.NET_CORE_MVC.Services.PlanetSerivce planetSerivce
+
+<h1>Các hành tinh trong hệ mặt trời</h1>
+
+@foreach (var item in planetSerivce)
+{
+    <a asp-asp-controller="Planet" asp-action="@item.Name">
+        @item.VnName - @item.Name
+    </a>
+}

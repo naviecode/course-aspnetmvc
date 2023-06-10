@@ -10,7 +10,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor;
 using ASP.NET_CORE_MVC.Services;
-
+using System.Net;
+using Microsoft.AspNetCore.Http;
+using ASP.NET_CORE_MVC.ExtendMethods;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing.Constraints;
 namespace ASP.NET_CORE_MVC
 {
     public class Startup
@@ -46,6 +50,7 @@ namespace ASP.NET_CORE_MVC
             // services.AddSingleton<ProductServices, ProductServices>();
             // services.AddSingleton(typeof(ProductServices));
             services.AddSingleton(typeof(ProductServices), typeof(ProductServices));
+            services.AddSingleton<PlanetSerivce>();
         
         }
 
@@ -65,6 +70,10 @@ namespace ASP.NET_CORE_MVC
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            //Tạo thêm phương thức mở rộng cho IApplicationBuilder trong thư mục ExtendMethods
+            app.AddStatusCodePage();
+            
+
             app.UseRouting();
 
             app.UseAuthentication(); //xác định danh tính
@@ -72,10 +81,76 @@ namespace ASP.NET_CORE_MVC
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                // endpoints.MapRazorPages();
+                // endpoints.MapControllerRoute(
+                //     name: "default",
+                //     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                // /sayhi
+                endpoints.MapGet("/sayhi", async(context)=>{
+                    await context.Response.WriteAsync($"Hello Asp.net MVC - {DateTime.Now}");
+                });
+
+                // endpoints.MapControllers
+                // endpoints.MapControllerRoute
+                // endpoints.MapDefaultControllerRoute
+                // endpoints.MapAreaControllerRoute
+
+                // [AcceotVerbs]
+                // [Route]
+                // [HttpGet]
+                // [HttpPost]
+                // [HttpPut]
+                // [HttpDelete]
+                // [HttpPatch]
+
+                //Area
+
+                endpoints.MapControllers();
+
+
+
+                //Thực hiện trên các controller không có area
+                endpoints.MapControllerRoute(
+                    name : "first",
+                    pattern: "{url:regex(^((xemsanpham)|(viewproduct))$)}/{id:range(2,4)}",
+                    defaults: new {
+                        controller= "First",
+                        action= "ViewProduct"
+                    },
+                    constraints: new{
+                        // url = new RegexRouteConstraint(@"^((xemsanpham)|(viewproduct))$"),
+                        // id = new RangeRouteConstraint(2,4)
+                    }
+
+
+                );
+
+                endpoints.MapAreaControllerRoute(
+                    name:"product",
+                    pattern: "/{controller}/{action=Index}/{Id?}",
+                    areaName : "ProductManage"
+                );
+
+                //Các ràng buộc trong endpoints
+                // IRouteConstraint
+                // url = "xemsanpham" //~ new StringRouteConstraint("xemsanpham)
+                //URL = start-here/Tencontroller/Action/id
+                //controller =>
+                //action =>
+                //area =>
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern:"/{controller=Home}/{action=Index}/{Id?}" //start-here, start-here/1
+                    // defaults: new {  
+                    //     controller = "First",
+                    //     action = "ViewProduct",
+                    //     id = 3
+                    // }
+                );
+
+                
+                endpoints.MapRazorPages();
             });
         }
     }

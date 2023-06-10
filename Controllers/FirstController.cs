@@ -95,6 +95,9 @@ namespace ASP.NET_CORE_MVC.Controllers
         }
         [TempData]
         public string StatusMessage{get;set;}
+
+        //Chỉ được phương thức truy cập là POST và GET
+        [AcceptVerbs("POST","GET")]
         public IActionResult ViewProduct(int? id)
         {
             var product = _productServices.Where(x=>x.Id == id).FirstOrDefault();
