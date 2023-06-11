@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Http;
 using ASP.NET_CORE_MVC.ExtendMethods;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Constraints;
+using ASP.NET_CORE_MVC.Models;
+using Microsoft.EntityFrameworkCore;
 namespace ASP.NET_CORE_MVC
 {
     public class Startup
@@ -31,6 +33,12 @@ namespace ASP.NET_CORE_MVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddDbContext<AppDBContext>(options=>{
+                string connectString = Configuration.GetConnectionString("AppMMvcConnectionString");
+                options.UseSqlServer(connectString);
+            });
+                
             services.AddControllersWithViews();
              services.AddRazorPages();
             // services.AddTransient(typeof(ILogger<>), typeof(Logger<>));

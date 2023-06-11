@@ -1,0 +1,56 @@
+@using Microsoft.EntityFrameworkCore
+@using System.Data
+
+@inject AppDBContext dbContext
+@{
+    ViewData["Title"]= "Thông tin Db";
+    var connect = dbContext.Database.GetDbConnection();
+
+    var dbname = connect.Database;
+    var can_connect = dbContext.Database.CanConnect();
+
+    dbContext.Database.GetPendingMigrations();
+
+}
+
+<partial name="_AlertMessage" />
+
+<h1>Thông tin về cơ sở dữ liệu</h1>
+
+<h2>Thông tin</h2>
+<p>--databsse : @dbname</p>
+<p>--Source : @connect.DataSource</p>
+<p>--State : @connect.State</p>
+<hr>
+<h2>Migrations</h2>
+@foreach (var migration in  dbContext.Database.GetAppliedMigrations())
+{
+    <p>@migration</p>
+}
+
+@if(!can_connect)
+{
+    <p>Không có khả năng kết nối đến db</p>
+}
+
+@if(dbContext.Database.GetPendingMigrations().Any())
+{
+    <form method="post">
+        <button asp-action="Migrate">Tạo DB (Cập nhập migration)</button>
+    </form>
+}
+
+@if(can_connect)
+{
+    <h2>Các bảng</h2>
+    await dbContext.Database.OpenConnectionAsync();
+    var table = dbContext.Database.GetDbConnection().GetSchema("Tables");
+    <ul>
+    @foreach(System.Data.DataRow row in table.Rows)
+    {
+        <li>@row["TABLE_NAME"]</li>
+    }
+    </ul>
+
+    <a asp-action="DeleteDb">Xóa database: @dbname</a>
+}
